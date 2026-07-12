@@ -1,0 +1,569 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Management System</title>
+
+<style>
+
+/* ==========================
+   GENERAL STYLING
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(-45deg,#ff0080,#7928ca,#00c6ff,#00ff99,#ff6a00);
+    background-size:400% 400%;
+    animation:gradientBG 10s ease infinite;
+    overflow-x:hidden;
+    position:relative;
+}
+
+/* Animated Background */
+
+@keyframes gradientBG{
+    0%{
+        background-position:0% 50%;
+    }
+    50%{
+        background-position:100% 50%;
+    }
+    100%{
+        background-position:0% 50%;
+    }
+}
+
+/* ==========================
+      LED LIGHTS
+========================== */
+
+.lights{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+    overflow:hidden;
+}
+
+.led{
+    position:absolute;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    animation:blink 1.5s infinite alternate;
+}
+
+.red{
+    background:red;
+    top:8%;
+    left:8%;
+    box-shadow:0 0 30px red;
+}
+
+.blue{
+    background:#00d9ff;
+    top:18%;
+    left:40%;
+    box-shadow:0 0 30px #00d9ff;
+}
+
+.green{
+    background:lime;
+    top:12%;
+    right:12%;
+    box-shadow:0 0 30px lime;
+}
+
+.yellow{
+    background:yellow;
+    top:40%;
+    left:5%;
+    box-shadow:0 0 30px yellow;
+}
+
+.orange{
+    background:orange;
+    top:55%;
+    right:8%;
+    box-shadow:0 0 30px orange;
+}
+
+.purple{
+    background:violet;
+    bottom:25%;
+    left:20%;
+    box-shadow:0 0 30px violet;
+}
+
+.cyan{
+    background:cyan;
+    bottom:18%;
+    right:25%;
+    box-shadow:0 0 30px cyan;
+}
+
+.white{
+    background:white;
+    bottom:10%;
+    left:45%;
+    box-shadow:0 0 40px white;
+}
+
+.pink{
+    background:hotpink;
+    top:70%;
+    right:45%;
+    box-shadow:0 0 35px hotpink;
+}
+
+.lime{
+    background:#7CFC00;
+    top:80%;
+    left:70%;
+    box-shadow:0 0 35px #7CFC00;
+}
+
+@keyframes blink{
+
+0%{
+opacity:.3;
+transform:scale(1);
+}
+
+50%{
+opacity:1;
+transform:scale(2);
+filter:brightness(250%);
+}
+
+100%{
+opacity:.4;
+transform:scale(1);
+}
+
+}
+
+/* ==========================
+      MAIN CONTAINER
+========================== */
+
+.container{
+
+width:92%;
+max-width:1100px;
+
+margin:35px auto;
+
+padding:30px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(15px);
+
+border-radius:20px;
+
+box-shadow:0 0 25px black;
+
+}
+
+h1{
+
+text-align:center;
+
+font-size:45px;
+
+color:white;
+
+text-shadow:3px 3px 8px black;
+
+margin-bottom:15px;
+
+}
+
+h2{
+
+text-align:center;
+
+color:white;
+
+margin-bottom:30px;
+
+}
+
+/* ==========================
+      ACTIVITY CARDS
+========================== */
+
+.activities{
+
+display:flex;
+
+gap:25px;
+
+flex-wrap:wrap;
+
+margin-bottom:35px;
+
+}
+
+.card{
+
+flex:1;
+
+min-width:320px;
+
+background:#FFE44D;
+
+padding:20px;
+
+border-radius:15px;
+
+box-shadow:0 0 15px black;
+
+transition:.4s;
+
+}
+
+.card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:0 0 25px white;
+
+}
+
+.card h3{
+
+text-align:center;
+
+font-size:28px;
+
+margin-bottom:20px;
+
+}
+
+.card ul{
+
+padding-left:20px;
+
+}
+
+.card li{
+
+margin-bottom:15px;
+
+line-height:1.5;
+
+font-size:16px;
+
+}
+
+/* ==========================
+      FORM
+========================== */
+
+form{
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+label{
+
+font-size:18px;
+
+color:white;
+
+margin-top:15px;
+
+font-weight:bold;
+
+}
+
+input,select{
+
+padding:12px;
+
+margin-top:5px;
+
+border:none;
+
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+button{
+
+margin-top:25px;
+
+padding:15px;
+
+background:#ff1744;
+
+color:white;
+
+font-size:22px;
+
+font-weight:bold;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+transition:.4s;
+
+}
+
+button:hover{
+
+background:#00ff99;
+
+color:black;
+
+transform:scale(1.05);
+
+}
+
+/* ==========================
+      SUCCESS PAGE
+========================== */
+
+#successPage{
+
+display:none;
+
+height:100vh;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+text-align:center;
+
+color:white;
+
+animation:fade 1s;
+
+}
+
+#successPage h1{
+
+font-size:60px;
+
+}
+
+#successPage h2{
+
+font-size:35px;
+
+margin-top:15px;
+
+}
+
+#successPage p{
+
+font-size:22px;
+
+margin-top:20px;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:scale(.8);
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LED LIGHTS -->
+
+<div class="lights">
+
+<span class="led red"></span>
+<span class="led blue"></span>
+<span class="led green"></span>
+<span class="led yellow"></span>
+<span class="led orange"></span>
+<span class="led purple"></span>
+<span class="led cyan"></span>
+<span class="led white"></span>
+<span class="led pink"></span>
+<span class="led lime"></span>
+
+</div>
+
+<!-- MAIN PAGE -->
+
+<div class="container" id="formPage">
+
+<h1>🎉 EVENT MANAGEMENT SYSTEM 🎉</h1>
+
+<h2>Register for Cultural & Sports Activities</h2>
+
+<div class="activities">
+
+<div class="card">
+
+<h3>🎭 Cultural Activities</h3>
+
+<ul>
+
+<li><b>💃 Dance:</b> Showcase your rhythm and creativity through energetic solo or group performances.</li>
+
+<li><b>🎤 Singing:</b> Participate in solo, duet or group singing competitions across multiple genres.</li>
+
+<li><b>🎬 Drama:</b> Perform stage plays and skits to demonstrate acting and storytelling skills.</li>
+
+<li><b>🎨 Painting:</b> Express your imagination using colors, sketches and artistic designs.</li>
+
+<li><b>📸 Photography:</b> Capture memorable moments and compete in creative photography contests.</li>
+
+<li><b>👗 Fashion Show:</b> Walk the ramp confidently while presenting unique themes and stylish outfits.</li>
+
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>🏆 Sports Activities</h3>
+
+<ul>
+
+<li><b>🏏 Cricket:</b> Team-based cricket tournament promoting sportsmanship and teamwork.</li>
+
+<li><b>⚽ Football:</b> Fast-paced football matches designed for players of all experience levels.</li>
+
+<li><b>🏀 Basketball:</b> Exciting basketball games that test speed, coordination and accuracy.</li>
+
+<li><b>🏸 Badminton:</b> Singles and doubles matches requiring quick reflexes and precision.</li>
+
+<li><b>🏐 Volleyball:</b> Competitive volleyball games focusing on teamwork and communication.</li>
+
+<li><b>♟ Chess:</b> Strategic chess competition that challenges planning, logic and decision-making.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<form id="eventForm">
+
+<label>Candidate Name</label>
+<input type="text" placeholder="Enter your full name" required>
+
+<label>Branch</label>
+<input type="text" placeholder="Enter your branch" required>
+
+<label>Year</label>
+
+<select required>
+
+<option value="">Select Year</option>
+
+<option>First Year</option>
+
+<option>Second Year</option>
+
+<option>Third Year</option>
+
+<option>Fourth Year</option>
+
+</select>
+
+<label>Interested Activity</label>
+
+<input type="text" placeholder="Example: Dance, Cricket, Chess..." required>
+
+<label>Have you participated in any such activity earlier?</label>
+
+<select required>
+
+<option value="">Select</option>
+
+<option>Yes</option>
+
+<option>No</option>
+
+</select>
+
+<label>Upload Certificates</label>
+
+<input type="file" multiple>
+
+<button type="submit">SUBMIT</button>
+
+</form>
+
+</div>
+
+<!-- SUCCESS PAGE -->
+
+<div id="successPage">
+
+<h1>🎉 THANK YOU! 🎉</h1>
+
+<h2>Your Response Was Submitted Successfully!</h2>
+
+<p>We appreciate your participation and wish you the very best for the event.</p>
+
+</div>
+
+<script>
+
+document.getElementById("eventForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+document.getElementById("formPage").style.display="none";
+
+document.getElementById("successPage").style.display="flex";
+
+alert("YOUR RESPONSE WAS SUBMITTED THANKYOU!");
+
+});
+
+</script>
+
+</body>
+</html>
+```
